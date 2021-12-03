@@ -125,7 +125,6 @@ open(fileName, "r", function (err, fd) {
     );
     if (read === 0) break;
     const str = buffer.toString("utf-8");
-    console.log(str);
     patterns.forEach((v) => {
       search(str, v);
     });
