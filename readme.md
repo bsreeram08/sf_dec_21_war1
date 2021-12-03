@@ -3,3 +3,6 @@
 ###### The implementation is done using the following approaches.
 - Boyer Moore Algorithm
 - Reading the large text file as chunk to avoid loading the whole file in memory.
+
+
+RUN readfile.ts
