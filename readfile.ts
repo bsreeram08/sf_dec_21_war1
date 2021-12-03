@@ -43,7 +43,7 @@ function max(a: number, b: number): number {
   return a > b ? a : b;
 }
 
-// Checking Bad Heuristic
+// Checking Bad Heuristicclear
 function badCharHeuristic(str: string[], size: number): number[] {
   const badChar = new Array(noc).fill(-1);
   for (let i = 0; i < size; i++) badChar[str[i].charCodeAt(0)] = i;
@@ -120,4 +120,5 @@ open("result1.txt", "r", function (err, fd) {
   const alts = (algoEndTime.getTime() - programStartTime.getTime()) / 1000;
   console.log(`Total Execution Time : ${stets} seconds`);
   console.log(`Total Algorithm Execution Time : ${alts} seconds`);
+  console.log("");
 });
