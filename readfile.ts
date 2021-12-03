@@ -109,7 +109,7 @@ function search(_txt: string, _pat: string) {
 open(fileName, "r", function (err, fd) {
   if (err) throw err;
   let chunks = statSync(fileName).size;
-  console.log(`FileSize : ${(chunks / (1000 * 1024 * 1024)).toFixed(4)} GiB`);
+  console.log(`FileSize : ${(chunks / (1000 * 1024 * 1024)).toFixed(4)} GiB\n`);
   let readBytes = 10000;
   let start = 0;
   let buffer;
@@ -134,16 +134,15 @@ open(fileName, "r", function (err, fd) {
   }
   const algoEndTime = new Date();
   Object.keys(matchCounter).forEach((v) => {
-    console.log(`WORD : ${v}`);
+    console.log(`\nWORD : ${v}`);
     console.log("Matches based on ranks [Most Perfect ... Least Perfect]");
     console.log(matchCounter[v].matches);
-    console.log(`Distant Matches : ${matchCounter[v].distantMatches}`);
+    console.log(`Distant Matches : ${matchCounter[v].distantMatches}\n`);
   });
   const programEndTime = new Date();
 
   const stets = (programEndTime.getTime() - programStartTime.getTime()) / 1000;
   const alts = (algoEndTime.getTime() - programStartTime.getTime()) / 1000;
   console.log(`Total Execution Time : ${stets} seconds`);
-  console.log(`Total Algorithm Execution Time : ${alts} seconds`);
-  console.log("");
+  console.log(`Total Algorithm Execution Time : ${alts} seconds\n`);
 });
