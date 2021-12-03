@@ -1,0 +1,12 @@
+{
+  "files.associations": {
+    "istream": "cpp",
+    "functional": "cpp",
+    "string": "cpp",
+    "__tree": "cpp",
+    "iterator": "cpp",
+    "set": "cpp",
+    "utility": "cpp"
+  },
+  "C_Cpp.errorSquiggles": "Disabled"
+}

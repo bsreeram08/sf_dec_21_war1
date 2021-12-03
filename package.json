@@ -1,0 +1,11 @@
+{
+  "name": "searchfile",
+  "version": "1.0.0",
+  "description": "- Boyer Moore Algorithm | Good Suffix heuristic - Reading the large text file as stream to avoid loading the whole file in memory. - At-most 3 spelling mismatches are taken as a case to value the search.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
