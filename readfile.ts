@@ -3,6 +3,7 @@ import { readSync, statSync, open } from "fs";
 const noc = 256;
 // List of patterns that has to be searched and ranked.
 const patterns: string[] = [
+  "Morem",
   "morem",
   "lorem",
   "Lorem",
@@ -87,12 +88,13 @@ function search(_txt: string, _pat: string) {
       matchDiff--;
     if (matchDiff < 0) {
       addMatch(_pat, _txt.substr(shift, _pat.length));
-      const spl: number = shift + pl;
-      shift += spl < tl ? pl - badChar[_txt.charCodeAt(spl)] : 1;
+      shift +=
+        shift + pl < tl ? pl - badChar[_txt.charCodeAt(shift + pl)] - 1 : 1;
     } else {
       if (matchDiff === 0) {
         addDistantMatch(_pat);
       }
+
       shift += max(
         1,
         matchDiff - badChar[txt[shift + matchDiff].charCodeAt(0)]
@@ -104,7 +106,7 @@ function search(_txt: string, _pat: string) {
 open(fileName, "r", function (err, fd) {
   if (err) throw err;
   let chunks = statSync(fileName).size;
-  console.log(`FileSize : ${chunks / (1000 * 1024 * 1024)}`);
+  console.log(`FileSize : ${(chunks / (1000 * 1024 * 1024)).toFixed(4)} GiB`);
   let readBytes = 10000;
   let start = 0;
   let buffer;
