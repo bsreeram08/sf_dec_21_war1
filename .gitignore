@@ -2,3 +2,5 @@
 readfile.js
 *.cpp
 *.out
+
+/archives
