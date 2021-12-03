@@ -1,6 +1,6 @@
 // Required Libraries to read the file.
 import { readSync, open } from "fs";
-
+const noc = 256;
 // List of patterns that has to be searched and ranked.
 const patterns: string[] = [
   "morem",
@@ -15,7 +15,7 @@ const patterns: string[] = [
 // Result Interface
 interface ICounter {
   matches: number[];
-  distantMatches: number[];
+  distantMatches: number;
 }
 
 // Min length of the pattern
@@ -31,7 +31,7 @@ const programStartTime = new Date();
 patterns.forEach((v) => {
   if (v.length < minLength) minLength = v.length;
   matchCounter[v] = {
-    distantMatches: new Array(3).fill(0),
+    distantMatches: 0,
     matches: new Array(v.length + 1).fill(0),
   };
 });
@@ -44,14 +44,10 @@ function max(a: number, b: number): number {
 }
 
 // Checking Bad Heuristic
-function badCharHeuristic(
-  str: string[],
-  size: number,
-  badChar: number[],
-  noc: number
-) {
-  badChar = new Array(noc).fill(-1);
+function badCharHeuristic(str: string[], size: number): number[] {
+  const badChar = new Array(noc).fill(-1);
   for (let i = 0; i < size; i++) badChar[str[i].charCodeAt(0)] = i;
+  return badChar;
 }
 
 // Add found match to the result based on Rank
@@ -67,6 +63,10 @@ function addMatch(pattern: string, match: string) {
   }
 }
 
+function addDistantMatch(pattern: string): void {
+  matchCounter[pattern].distantMatches++;
+}
+
 // Text searcher for pattern
 function search(_txt: string, _pat: string) {
   const txt = _txt.toLowerCase().split("");
@@ -74,28 +74,28 @@ function search(_txt: string, _pat: string) {
   let pl = pat.length;
   let tl = txt.length;
 
-  let badChar: number[] = new Array(_txt.length);
-
-  badCharHeuristic(pat, pl, badChar, _txt.length);
+  let badChar: number[] = badCharHeuristic(pat, pl);
 
   let shift = 0;
   while (shift <= tl - pl) {
+    if (!_txt[shift].match(/[A-Za-z\s]/)) break;
     let matchDiff = pl - 1;
-    while (matchDiff >= 0 && pat[matchDiff] == txt[shift + matchDiff])
+    while (matchDiff >= 0 && pat[matchDiff] === txt[shift + matchDiff])
       matchDiff--;
     if (matchDiff < 0) {
       addMatch(_pat, _txt.substr(shift, pat.length));
-      shift +=
-        shift + pl < tl ? pl - badChar[txt[shift + pl].charCodeAt(0)] : 1;
-    } else
+      const spl: number = shift + pl;
+      shift += spl < tl ? pl - badChar[_txt.charCodeAt(spl)] : 1;
+    } else {
       shift += max(
         1,
         matchDiff - badChar[txt[shift + matchDiff].charCodeAt(0)]
       );
+    }
   }
 }
 
-open("result.txt", "r", function (err, fd) {
+open("result1.txt", "r", function (err, fd) {
   if (err) throw err;
   var buffer = Buffer.alloc(10000);
   let prevWord = "";
