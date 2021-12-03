@@ -11,10 +11,13 @@ const patterns: string[] = [
   "LOREM",
   "loreM",
   "lOREM",
+  "sreeram",
+  "amet",
+  "dui",
   "dolor",
 ];
 
-const fileName = "result1.txt";
+const fileName = "result2.txt";
 
 // Result Interface
 interface ICounter {
@@ -72,6 +75,7 @@ function addDistantMatch(pattern: string): void {
 }
 
 // Text searcher for pattern
+
 function search(_txt: string, _pat: string) {
   const txt = _txt.toLowerCase().split("");
   const pat = _pat.toLowerCase().split("");
@@ -81,20 +85,19 @@ function search(_txt: string, _pat: string) {
   let badChar: number[] = badCharHeuristic(pat, pl);
 
   let shift = 0;
+
   while (shift <= tl - pl) {
-    if (!_txt[shift].match(/[A-Za-z\s]/)) break;
     let matchDiff = pl - 1;
-    while (matchDiff >= 0 && pat[matchDiff] === txt[shift + matchDiff])
+    while (matchDiff >= 0 && pat[matchDiff] == txt[shift + matchDiff])
       matchDiff--;
     if (matchDiff < 0) {
       addMatch(_pat, _txt.substr(shift, _pat.length));
       shift +=
-        shift + pl < tl ? pl - badChar[_txt.charCodeAt(shift + pl)] - 1 : 1;
+        shift + pl < tl ? pl - badChar[txt[shift + pl].charCodeAt(0)] : 1;
     } else {
       if (matchDiff === 0) {
         addDistantMatch(_pat);
       }
-
       shift += max(
         1,
         matchDiff - badChar[txt[shift + matchDiff].charCodeAt(0)]
@@ -106,21 +109,25 @@ function search(_txt: string, _pat: string) {
 open(fileName, "r", function (err, fd) {
   if (err) throw err;
   let chunks = statSync(fileName).size;
+  console.log(chunks);
   console.log(`FileSize : ${(chunks / (1000 * 1024 * 1024)).toFixed(4)} GiB`);
   let readBytes = 10000;
   let start = 0;
   let buffer;
   while (chunks > 0) {
     buffer = Buffer.alloc(readBytes);
+    console.log(start, readBytes);
+
     const read = readSync(
       fd,
       buffer,
       0,
       readBytes,
-      start === 0 ? start : start - minLength
+      start === 0 ? start : start - minLength - 1
     );
     if (read === 0) break;
     const str = buffer.toString("utf-8");
+    console.log(str);
     patterns.forEach((v) => {
       search(str, v);
     });
@@ -131,7 +138,7 @@ open(fileName, "r", function (err, fd) {
   const algoEndTime = new Date();
   Object.keys(matchCounter).forEach((v) => {
     console.log(`WORD : ${v}`);
-    console.log("Matches based on ranks [MostPerfect...Least Perfect]");
+    console.log("Matches based on ranks [Most Perfect ... Least Perfect]");
     console.log(matchCounter[v].matches);
     console.log(`Distant Matches : ${matchCounter[v].distantMatches}`);
   });
