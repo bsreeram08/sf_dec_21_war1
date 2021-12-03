@@ -17,7 +17,7 @@ const patterns: string[] = [
   "dolor",
 ];
 
-const fileName = "result2.txt";
+const fileName = "result1.txt";
 
 // Result Interface
 interface ICounter {
