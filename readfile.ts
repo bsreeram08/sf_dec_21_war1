@@ -86,10 +86,13 @@ function search(_txt: string, _pat: string) {
     while (matchDiff >= 0 && pat[matchDiff] === txt[shift + matchDiff])
       matchDiff--;
     if (matchDiff < 0) {
-      addMatch(_pat, _txt.substr(shift, pat.length));
+      addMatch(_pat, _txt.substr(shift, _pat.length));
       const spl: number = shift + pl;
       shift += spl < tl ? pl - badChar[_txt.charCodeAt(spl)] : 1;
     } else {
+      if (matchDiff === 0) {
+        addDistantMatch(_pat);
+      }
       shift += max(
         1,
         matchDiff - badChar[txt[shift + matchDiff].charCodeAt(0)]
