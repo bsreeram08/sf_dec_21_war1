@@ -10,6 +10,7 @@ const patterns: string[] = [
   "LOREM",
   "loreM",
   "lOREM",
+  "dolor",
 ];
 
 const fileName = "result1.txt";
@@ -100,16 +101,21 @@ function search(_txt: string, _pat: string) {
 open(fileName, "r", function (err, fd) {
   if (err) throw err;
   let chunks = statSync(fileName).size;
+  console.log(`FileSize : ${chunks / (1000 * 1024 * 1024)}`);
   let readBytes = 10000;
   let start = 0;
   let buffer;
-  let prevWord = "";
   while (chunks > 0) {
     buffer = Buffer.alloc(readBytes);
-    const read = readSync(fd, buffer, 0, readBytes, start);
+    const read = readSync(
+      fd,
+      buffer,
+      0,
+      readBytes,
+      start === 0 ? start : start - minLength
+    );
     if (read === 0) break;
-    const str = prevWord + buffer.toString("utf-8");
-    prevWord = str.substr(-minLength);
+    const str = buffer.toString("utf-8");
     patterns.forEach((v) => {
       search(str, v);
     });
