@@ -1,5 +1,5 @@
 // Required Libraries to read the file.
-import { readSync, open } from "fs";
+import { readSync, statSync, open } from "fs";
 const noc = 256;
 // List of patterns that has to be searched and ranked.
 const patterns: string[] = [
@@ -11,6 +11,8 @@ const patterns: string[] = [
   "loreM",
   "lOREM",
 ];
+
+const fileName = "result1.txt";
 
 // Result Interface
 interface ICounter {
@@ -95,18 +97,25 @@ function search(_txt: string, _pat: string) {
   }
 }
 
-open("result1.txt", "r", function (err, fd) {
+open(fileName, "r", function (err, fd) {
   if (err) throw err;
-  var buffer = Buffer.alloc(10000);
+  let chunks = statSync(fileName).size;
+  let readBytes = 10000;
+  let start = 0;
+  let buffer;
   let prevWord = "";
-  while (true) {
-    const read = readSync(fd, buffer, 0, 10000, null);
+  while (chunks > 0) {
+    buffer = Buffer.alloc(readBytes);
+    const read = readSync(fd, buffer, 0, readBytes, start);
     if (read === 0) break;
     const str = prevWord + buffer.toString("utf-8");
     prevWord = str.substr(-minLength);
     patterns.forEach((v) => {
       search(str, v);
     });
+    start += readBytes;
+    chunks -= readBytes;
+    if (chunks < readBytes) readBytes = chunks;
   }
   const algoEndTime = new Date();
   Object.keys(matchCounter).forEach((v) => {
