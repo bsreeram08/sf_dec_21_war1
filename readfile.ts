@@ -31,10 +31,9 @@ const programStartTime = new Date();
 patterns.forEach((v) => {
   if (v.length < minLength) minLength = v.length;
   matchCounter[v] = {
-    distantMatches: v.split("").map((v) => 0),
-    matches: v.split("").map((v) => 0),
+    distantMatches: new Array(3).fill(0),
+    matches: new Array(v.length + 1).fill(0),
   };
-  matchCounter[v].matches.push(0);
 });
 
 minLength--;
@@ -51,7 +50,7 @@ function badCharHeuristic(
   badChar: number[],
   noc: number
 ) {
-  for (let i = 0; i < noc; i++) badChar[i] = -1;
+  badChar = new Array(noc).fill(-1);
   for (let i = 0; i < size; i++) badChar[str[i].charCodeAt(0)] = i;
 }
 
@@ -119,6 +118,6 @@ open("result.txt", "r", function (err, fd) {
 
   const stets = (programEndTime.getTime() - programStartTime.getTime()) / 1000;
   const alts = (algoEndTime.getTime() - programStartTime.getTime()) / 1000;
-  console.log(`Total Execution Time : ${stets}`);
-  console.log(`Total Algorithm Execution Time : ${alts}`);
+  console.log(`Total Execution Time : ${stets} seconds`);
+  console.log(`Total Algorithm Execution Time : ${alts} seconds`);
 });
