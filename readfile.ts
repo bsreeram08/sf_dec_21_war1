@@ -109,15 +109,13 @@ function search(_txt: string, _pat: string) {
 open(fileName, "r", function (err, fd) {
   if (err) throw err;
   let chunks = statSync(fileName).size;
-  console.log(chunks);
   console.log(`FileSize : ${(chunks / (1000 * 1024 * 1024)).toFixed(4)} GiB`);
   let readBytes = 10000;
   let start = 0;
   let buffer;
   while (chunks > 0) {
+    if (chunks - readBytes <= 0) readBytes += 10;
     buffer = Buffer.alloc(readBytes);
-    console.log(start, readBytes);
-
     const read = readSync(
       fd,
       buffer,
