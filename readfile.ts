@@ -128,6 +128,7 @@ open(fileName, "r", function (err, fd) {
     console.log(`WORD : ${v}`);
     console.log("Matches based on ranks [MostPerfect...Least Perfect]");
     console.log(matchCounter[v].matches);
+    console.log(`Distant Matches : ${matchCounter[v].distantMatches}`);
   });
   const programEndTime = new Date();
 
