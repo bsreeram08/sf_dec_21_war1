@@ -34,7 +34,10 @@ patterns.forEach((v) => {
     distantMatches: v.split("").map((v) => 0),
     matches: v.split("").map((v) => 0),
   };
+  matchCounter[v].matches.push(0);
 });
+
+minLength--;
 
 // Max of two Numbers
 function max(a: number, b: number): number {
@@ -95,16 +98,16 @@ function search(_txt: string, _pat: string) {
 
 open("result.txt", "r", function (err, fd) {
   if (err) throw err;
-  var buffer = Buffer.alloc(100);
+  var buffer = Buffer.alloc(10000);
   let prevWord = "";
   while (true) {
-    const read = readSync(fd, buffer, 0, 100, null);
+    const read = readSync(fd, buffer, 0, 10000, null);
     if (read === 0) break;
     const str = prevWord + buffer.toString("utf-8");
+    prevWord = str.substr(-minLength);
     patterns.forEach((v) => {
       search(str, v);
     });
-    prevWord = str.substr(-(minLength - 1));
   }
   const algoEndTime = new Date();
   Object.keys(matchCounter).forEach((v) => {
@@ -114,8 +117,8 @@ open("result.txt", "r", function (err, fd) {
   });
   const programEndTime = new Date();
 
-  const stets = programEndTime.getTime() - programStartTime.getTime();
-  const alts = algoEndTime.getTime() - programStartTime.getTime();
+  const stets = (programEndTime.getTime() - programStartTime.getTime()) / 1000;
+  const alts = (algoEndTime.getTime() - programStartTime.getTime()) / 1000;
   console.log(`Total Execution Time : ${stets}`);
   console.log(`Total Algorithm Execution Time : ${alts}`);
 });
